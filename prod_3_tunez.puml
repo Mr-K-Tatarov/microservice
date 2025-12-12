@@ -1,0 +1,104 @@
+@startuml
+' Стиль компонентов
+skinparam componentStyle rectangle
+
+' Группы сервисов
+package "Frontend Layer" {
+    [Web Application] as webapp
+    [Mobile Application] as mobileapp
+    [Desktop Application] as desktopapp
+}
+
+package "API Gateway & Load Balancing" {
+    [API Gateway] as apigateway
+    [Load Balancer] as loadbalancer
+}
+
+package "Authentication & Authorization" {
+    [Auth Service] as authservice
+    [User Management] as usermgmt
+    [Permission Service] as permissions
+}
+
+package "Core Services" {
+    [Music Streaming Service] as streamingservice
+    [Playlist Service] as playlistservice
+    [Recommendation Service] as recommendationservice
+    [Search Service] as searchservice
+    [Metadata Service] as metadataservice
+    [Ad Service] as adservice
+}
+
+package "Data Layer" {
+    [Music Storage] as musicstorage
+    [Database Cluster] as database
+    [Cache Layer] as cache
+    [Search Index] as searchindex
+    [Analytics Storage] as analytics
+    [Data Lake] as datalake
+}
+
+package "External Services" {
+    [Payment Provider] as payment
+    [CDN] as cdn
+}
+
+' Связи между компонентами
+webapp --> apigateway : HTTP/REST
+mobileapp --> apigateway : HTTP/REST
+desktopapp --> apigateway : HTTP/REST
+
+apigateway --> loadbalancer : Request Routing
+
+loadbalancer --> authservice : Auth Requests
+loadbalancer --> streamingservice : Stream Requests
+loadbalancer --> playlistservice : Playlist Requests
+loadbalancer --> recommendationservice : Recommendation Requests
+loadbalancer --> searchservice : Search Requests
+loadbalancer --> adservice : Ad Requests
+
+authservice --> usermgmt : User Data
+authservice --> permissions : Permission Check
+usermgmt --> database : Store/Retrieve
+permissions --> database : Store/Retrieve
+
+streamingservice --> musicstorage : Get Music Files
+streamingservice --> metadataservice : Get Metadata
+streamingservice --> cache : Cache Hot Data
+streamingservice --> cdn : CDN Distribution
+
+playlistservice --> database : Store Playlists
+playlistservice --> metadataservice : Get Track Info
+
+recommendationservice --> analytics : User Behavior
+recommendationservice --> metadataservice : Track Metadata
+recommendationservice --> cache : Cache Recommendations
+
+searchservice --> searchindex : Search Queries
+searchservice --> metadataservice : Enrich Results
+
+metadataservice --> database : Track Info
+searchindex --> database : Index Data
+
+musicstorage --> cdn : Distribute Content
+cache --> database : Cache Miss
+
+' Внешние зависимости
+streamingservice --> payment : Billing
+
+' Связи для Data Lake
+analytics --> datalake : Export Raw Data
+recommendationservice --> datalake : Get Historical Data
+adservice --> datalake : Get User/Content Data
+
+' Связи для Ad Service
+adservice --> payment : Track Impressions/Clicks
+adservice --> metadataservice : Get Content Context
+adservice --> cache : Cache Ad Data
+
+' Отображение рекламы клиенту
+adservice --> webapp : Serve Ad
+adservice --> mobileapp : Serve Ad
+adservice --> desktopapp : Serve Ad
+
+@enduml
