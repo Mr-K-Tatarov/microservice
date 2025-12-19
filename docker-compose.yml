@@ -19,8 +19,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 6
-    volumes:
-      - kafka-data:/bitnami/kafka
+#    volumes:
+#      - kafka-data:/bitnami/kafka
     networks:
       - kafka-network
 
@@ -37,7 +37,7 @@ services:
       - "9000:9000"  # native (для clickhouse-driver)
     volumes:
       - ./data/node1:/etc/clickhouse-server
-      - clickhouse-data:/var/lib/clickhouse
+#      - clickhouse-data:/var/lib/clickhouse
     depends_on:
       - zookeeper
     networks:
@@ -55,11 +55,11 @@ services:
       - kafka-network
     restart: unless-stopped
 
-volumes:
-  kafka-data:
-    driver: local
-  clickhouse-data:
-    driver: local
+#volumes:
+#  kafka-data:
+#    driver: local
+#  clickhouse-data:
+#    driver: local
 
 networks:
   kafka-network:
