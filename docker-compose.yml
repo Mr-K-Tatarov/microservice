@@ -24,10 +24,10 @@ services:
     networks:
       - kafka-network
 
-  zookeeper:
-    image: zookeeper:3.8
-    container_name: zookeeper
-    hostname: zookeeper
+#  zookeeper:
+#    image: zookeeper:3.8
+#    container_name: zookeeper
+#    hostname: zookeeper
 
   clickhouse:
     image: clickhouse/clickhouse-server:23
@@ -42,8 +42,8 @@ services:
 #    volumes:
 #      - ./data/node1:/etc/clickhouse-server
 #      - clickhouse-data:/var/lib/clickhouse
-    depends_on:
-      - zookeeper
+#    depends_on:
+#      - zookeeper
     networks:
       - kafka-network
 
